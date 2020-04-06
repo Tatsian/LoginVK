@@ -11,8 +11,6 @@ import UIKit
 class ViewController: UIViewController {
 
     var vkImage = UIImageView()
-    var loginTextField = UITextField()
-    var passwordTextField = UITextField()
     var button = UIButton()
     
     override func viewDidLoad() {
@@ -20,8 +18,6 @@ class ViewController: UIViewController {
 
         view.backgroundColor = UIColor(hex: "#416794")
         createVKImage()
-        setUp(textField: loginTextField, placeholder: "Enter login or email", isSecure: false)
-        setUp(textField: passwordTextField, placeholder: "Enter password", isSecure: true)
         createAuthorizationButton()
         createConstraints()
     }
@@ -34,19 +30,6 @@ class ViewController: UIViewController {
             self.vkImage.transform = .identity
         })
         self.view.addSubview(vkImage)
-    }
-    
-    func setUp(textField: UITextField, placeholder: String, isSecure: Bool) {
-        textField.borderStyle = UITextField.BorderStyle.roundedRect
-        textField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        textField.placeholder = placeholder
-        textField.center = self.view.center
-        textField.backgroundColor = UIColor.white
-        textField.keyboardType = UIKeyboardType.default
-        textField.returnKeyType = UIReturnKeyType.done
-        textField.clearButtonMode = UITextField.ViewMode.whileEditing
-        textField.isSecureTextEntry = isSecure
-        self.view.addSubview(textField)
     }
     
     func createAuthorizationButton() {
@@ -74,24 +57,11 @@ class ViewController: UIViewController {
           equalTo: view.centerXAnchor).isActive = true
         vkImage.heightAnchor.constraint(equalToConstant: width).isActive = true
         vkImage.widthAnchor.constraint(equalToConstant: width).isActive = true
-        
-        loginTextField.translatesAutoresizingMaskIntoConstraints = false
-        loginTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: indent).isActive = true
-        loginTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -indent).isActive = true
-        loginTextField.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor).isActive = true
-        loginTextField.heightAnchor.constraint(equalToConstant: heightOfField).isActive = true
-        
-        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        passwordTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: indent).isActive = true
-        passwordTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -indent).isActive = true
-        passwordTextField.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -indent).isActive = true
-        passwordTextField.heightAnchor.constraint(equalToConstant: heightOfField).isActive = true
-        
+
         button.translatesAutoresizingMaskIntoConstraints = false
         button.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: indent).isActive = true
         button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -indent).isActive = true
-        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -width * 0.2).isActive = true
+        button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         button.heightAnchor.constraint(equalToConstant: heightOfField).isActive = true
     }
 }
-
