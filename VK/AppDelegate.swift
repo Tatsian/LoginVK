@@ -7,14 +7,33 @@
 //
 
 import UIKit
+import VK_ios_sdk
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
+    var authService: AuthService!
+    
+    static func shared() -> AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        window = UIWindow()
+        self.authService = AuthService()
+        
+        authService.delegate = self as? AuthServiceDelegate
+        let scope = ["wall", "friends"]
+        
+        VKSdk.wakeUpSession(scope) { (state, _) in
+            if state == VKAuthorizationState.authorized {
+                self.authServiceSingIn()
+            } else {
+                self.authVC()
+            }
+        }
         return true
     }
 
@@ -31,7 +50,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        VKSdk.processOpen(url as URL, fromApplication: UIApplication.OpenURLOptionsKey.sourceApplication.rawValue)
+       return true
+    }
 
+    func authServiceSingIn() {
+        print(#function)
+        let friendsVC = UserFriendsViewController()
+        let navVC = UINavigationController(rootViewController: friendsVC)
+        window?.rootViewController = navVC
+        window?.makeKeyAndVisible()
+    }
+    
+    func authServiceDidSingInFail() {
+        print(#function)
+    }
+    
+    func authVC() {
+        print(#function)
+        let authVC = AuthViewController()
+        let navVC = UINavigationController(rootViewController: authVC)
+        window?.rootViewController = navVC
+        window?.makeKeyAndVisible()
+    }
 
 }
 

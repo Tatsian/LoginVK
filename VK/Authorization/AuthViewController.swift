@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class AuthViewController: UIViewController {
 
+    private var authService: AuthService!
     var vkImage = UIImageView()
     var button = UIButton()
     
@@ -20,6 +21,9 @@ class ViewController: UIViewController {
         createVKImage()
         createAuthorizationButton()
         createConstraints()
+        
+        authService = AppDelegate.shared().authService
+        self.navigationController?.isNavigationBarHidden = true
     }
 
     func createVKImage() {
@@ -43,6 +47,7 @@ class ViewController: UIViewController {
 
     @objc func pressAuthorizationButton(_ sender: UIButton!) {
         print("Hello world")
+        authService.wakeUpSession()
     }
     
     func createConstraints() {
