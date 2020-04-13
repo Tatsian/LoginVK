@@ -22,17 +22,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         window = UIWindow()
+        
+        let navigationVC = UINavigationController()
+        window?.rootViewController = navigationVC
         self.authService = AuthService()
         
-        authService.delegate = self as? AuthServiceDelegate
+        authService.delegate = self
         let scope = ["wall", "friends"]
         
         VKSdk.wakeUpSession(scope) { (state, _) in
+            let viewControllerToOpen: UIViewController
+            
             if state == VKAuthorizationState.authorized {
-                self.authServiceSingIn()
+                viewControllerToOpen = UserFriendsViewController()
             } else {
-                self.authVC()
+                viewControllerToOpen = AuthViewController()
             }
+            
+            navigationVC.pushViewController(viewControllerToOpen, animated: false)
         }
         return true
     }
@@ -56,25 +63,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        return true
     }
 
-    func authServiceSingIn() {
-        print(#function)
-        let friendsVC = UserFriendsViewController()
-        let navVC = UINavigationController(rootViewController: friendsVC)
-        window?.rootViewController = navVC
-        window?.makeKeyAndVisible()
-    }
-    
-    func authServiceDidSingInFail() {
-        print(#function)
-    }
-    
-    func authVC() {
-        print(#function)
-        let authVC = AuthViewController()
-        let navVC = UINavigationController(rootViewController: authVC)
-        window?.rootViewController = navVC
-        window?.makeKeyAndVisible()
-    }
+}
 
+extension AppDelegate: AuthServiceDelegate {
+    func authServiceShouldShow(_ viewController: UIViewController) {
+        let friendsVC = UserFriendsViewController()
+        (window?.rootViewController as? UINavigationController)?.pushViewController(friendsVC, animated: true)
+    }
+    
+    func authServiceSignIn() {
+        let authVC = AuthViewController()
+        (window?.rootViewController as? UINavigationController)?.pushViewController(authVC, animated: true)
+    }
+    
+    func authServiceDidSignInFail() {
+        print(#function)
+    }
 }
 
